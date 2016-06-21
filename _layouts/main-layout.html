@@ -54,42 +54,16 @@
 
         Il y a quelques mois, votre entreprise a suivie le dernier buzz word à la mode suite à une université à devoxx france, et à décider de se lancer dans l’aventure des micro services. De très nombreux micro services plus tard, un problème est apparu : comment connaître l’adresse de mes services. Après consultation du pôle architecture de notre société, suivi par de trop nombreuses réunions, il a été décidé de mettre en place une solution de service discovery.
 
-        <h3>Téléchargement de la clef privé</h3>
+        <h3>Connection aux machines</h3>
 
 
-        <p>Pour vous connecter aux machines, récupérer le fichier <a href="https://raw.github.com/Jean-Eudes/techevent-consul/master/script/consul.pem">graphite.pem</a> ou le fichier <a href="https://raw.github.com/Jean-Eudes/techevent-consul/master/script/consul.ppk">graphite.ppk</a> pour les utilisateurs Windows, dans votre répertoire courant (la clef sera révoquée après le workshop). N'oubliez pas de changer les permissions sur le fichier :</p>
-
-        <h4>Pour Linux ou Mac :</h4>
-
-        {% highlight bash %}
-$ chmod 600 graphite.pem
-        {% endhighlight %}
-
+        <p>Pour vous connecter aux machines : </p>
 
         {% highlight bash %}
 $ ssh consul@{{page.group}}-server.consul.aws.xebiatechevent.info
         {% endhighlight %}
 
-        <h4>Pour windows :</h4>
-        <ul>
-            <li>Si vous ne l'avez pas, récupérez <a href="http://the.earth.li/~sgtatham/putty/latest/x86/putty.exe">PuTTY</a></li>
-            <li>Entrez l'adresse <em>{{page.group}}-server.consul.aws.xebiatechevent.info</em> à l'emplacement de l'encadré rouge ci-dessous</li>
-        </ul>
-
-        <img src="../images/putty_ip.png" alt="putty ip"/>
-
-        <ul>
-            <li>Suivez ensuite les screenshots suivants :</li>
-        </ul>
-
-        <img src="../images/putty_user.png" alt="putty2"/>
-        <img src="../images/putty_key1.png" alt="putty3"/>
-        <img src="../images/putty_key2.png" alt="putty4"/>
-        <img src="../images/putty_open_connection.png" alt="putty5"/>
-
-
-
-        ## Installation de consul (étape déjà faite pour ce techeveny)
+        ## Installation de consul (étape déjà faite pour ce techevent)
 
         Consul est livré sous la forme d’un simple binaire. Il suffit simplement de le télécharger :
 
@@ -107,7 +81,7 @@ $ wget https://dl.bintray.com/mitchellh/consul/0.6.4_linux_amd64.zip
         Pour celà, connectez vous sur le serveur consul
 
         {% highlight bash %}
-$ ssh -i consul.pem ec2-user@{{page.group}}-server.consul.aws.xebiatechevent.info
+$ ssh consul@{{page.group}}-server.consul.aws.xebiatechevent.info
         {% endhighlight %}
 
         et lancer le serveur :
@@ -129,7 +103,7 @@ $ consul members
         On va maintenant ajouter un agent consul et le connecter à notre serveur. Connectez vous à votre machine web1, et lancer l'agent consul
 
         {% highlight bash %}
-$ ssh -i consul.pem ec2-user@{{page.group}}-web1.consul.aws.xebiatechevent.info
+$ ssh consul@{{page.group}}-web1.consul.aws.xebiatechevent.info
         {% endhighlight %}
 
 
