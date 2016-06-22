@@ -44,15 +44,17 @@
             <li>1 instance servant à répartir la charge entre les deux instances de service web</li>
         </ul>
 
-        <p>Template {{page.group}}</p>
+        Le but de ce workshop est d'utiliser consul pour enregister la configuration de vos services, puis d'utiliser cette configuration
+        afin de générer la configuration d'un load balancer : ceci permettra à votre application de scaler de manière automatique.
+
     </section>
 
     <section>
-        Consul est un outil de service discovery, permettant à des services de s'enregistrer auprès d'un serveur, et à d'autres services d'interroger ce même serveur pour récupérer des informations sur les services déployés sur notre cluster
+        Consul est un outil de service discovery, permettant à des services de s'enregistrer auprès d'un serveur, et à d'autres services d'interroger ce même serveur pour récupérer des informations sur les services déployés sur notre cluster.
 
         <h2>Introduction</h2>
 
-        Il y a quelques mois, votre entreprise a suivie le dernier buzz word à la mode suite à une université à devoxx france, et à décider de se lancer dans l’aventure des micro services. De très nombreux micro services plus tard, un problème est apparu : comment connaître l’adresse de mes services. Après consultation du pôle architecture de notre société, suivi par de trop nombreuses réunions, il a été décidé de mettre en place une solution de service discovery.
+        Il y a quelques mois, votre entreprise a suivi le dernier buzz word à la mode suite à une université à devoxx france, et à décider de se lancer dans l’aventure des micro services. De très nombreux micro services plus tard, un problème est apparu : comment connaître l’adresse de mes services. Après consultation du pôle architecture de notre société, suivi par de trop nombreuses réunions, il a été décidé de mettre en place une solution de service discovery.
 
         <h2>Connection aux machines</h2>
 
