@@ -308,7 +308,7 @@ $ ssh consul@{{page.group}}-web1.consul.aws.xebiatechevent.info
 $ consul agent -data-dir /tmp/consul -node=agent1 -config-dir /etc/consul.d > log &
 $ consul join <addr_ip_privé_serveur_consul/>
 $ echo -e "{"service": { "name": "web", "tags": ["web2"], "port": 8000} }" > /etc/consul.d/web2.json
-$ consul reloads
+$ consul reload
         {% endhighlight %}
             </div>
 
@@ -377,7 +377,6 @@ $ consul reloads
         $ df -h | awk '$NF=="/"{printf "Disk Usage: %d/%dGB (%s)\n", $3,$2,$5}'
         $ cat /proc/loadavg | awk '{printf "CPU Load Average: 1m: %.2f, 5m: %.2f, 15m: %.2f\n", $1,$2,$3}'
         {% endhighlight %}
-
 
     </section>
 
