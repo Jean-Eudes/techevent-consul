@@ -271,7 +271,7 @@ $ cat /proc/loadavg | awk '{printf "CPU Load Average: 1m: %.2f, 5m: %.2f, 15m: %
     Dans l'écosystème consul, il existe un outil appelé <em>consul-template</em> qui permet de générer un fichier à partir des informations contenues dans consul.
     consul-template regénère ce fichier si la configuration change dans consul, et peut également lancer une commande (par exemple un reload de haproxy).
 
-    Les fichiers template gérés par consul se base sur la syntaxe <a href="https://github.com/hashicorp/hcl">hcl</a>hcl. En vous basant sur l'exemple suivant,
+    Les fichiers template gérés par consul se base sur la syntaxe <a href="https://github.com/hashicorp/hcl">hcl</a>. En vous basant sur l'exemple suivant,
     créer un fichier template (haproxy.tmpl) qui génère une configuration haproxy renvoyant les requêtes vers notre service <em>web</em>.
 
     {% highlight bash %}
@@ -334,12 +334,18 @@ server {{ "{{ .Node "}} }} {{ "{{.Address "}} }} : {{ "{{ .Port "}} }} {{ "{{ en
 
         On va maintenant ajouter un deuxième service <em>web</em> sur la machine web2, et l'enregistrer auprès de consul. Pour celà, connectez vous sur la machine web2, installer le client consul, et enregistrer un deuxième service <em>web</em>.
 
+        <div class = 'solution'>
 
         {% highlight bash %}
 $ ssh consul@{{page.group}}-web1.consul.aws.xebiatechevent.info
 $ consul agent -data-dir /tmp/consul -node=agent1 -config-dir /etc/consul.d > log &
 $ consul join <addr_ip_privé_serveur_consul/>
+$ echo -e "{"service": { "name": "web", "tags": ["web2"], "port": 8000} }" > /etc/consul.d/web2.json
+$ consul reloads
         {% endhighlight %}
+            </div>
+
+        On remarque que la configuration du fichier haproxy se met automatiquement à jour.
 
     </section>
 
