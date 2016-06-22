@@ -331,7 +331,7 @@ $ consul reload
         service/haproxy/mode : http
         {% endhighlight %}
 
-        <a href="https://www.consul.io/intro/getting-started/kv.html">lien vers la documentation de la base de donnée</a>
+        <a href="https://www.consul.io/intro/getting-started/kv.html">lien vers la documentation de la base de données</a>
 
         <div class = 'solution'>
             {% highlight bash %}
@@ -340,6 +340,9 @@ $ consul reload
             $ curl -X PUT -d 'http' http://localhost:8500/v1/kv/service/haproxy/mode
             {% endhighlight %}
         </div>
+
+        Connectez vous ensuite sur la machine balancer, et modifiez la configuration du template haproxy pour utiliser ces valeurs dans la
+        configuration HAproxy.
 
     </section>
 
