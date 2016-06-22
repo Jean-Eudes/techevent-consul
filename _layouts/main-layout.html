@@ -111,9 +111,8 @@ $ ssh consul@{{page.group}}-web1.consul.aws.xebiatechevent.info
 
 
         {% highlight bash %}
-$ mkdir -p etc/consul.d
-$ consul agent -data-dir /tmp/consul -node=agent1 -config-dir etc/consul.d > log &
-$ consul join <addr_ip_privé_serveur/>
+$ consul agent -data-dir /tmp/consul -node=agent1 -config-dir /etc/consul.d > log &
+$ consul join <addr_ip_privé_serveur_consul/>
         {% endhighlight %}
 
         Si vous demandez maintenant à consul de vous affichez l’état du cluster, vous verrez bien apparaître deux lignes, une pour le serveur, et une pour le client.
@@ -128,7 +127,7 @@ $ curl localhost:8500/v1/catalog/nodes
         Il est également possible de voir l’état du cluster en se connectant à l’interface web :
 
         {% highlight bash %}
-$ http://{{page.group}}-server.consul.aws.xebiatechevent.info:8500/ui/
+$ curl http://{{page.group}}-server.consul.aws.xebiatechevent.info:8500/ui/
         {% endhighlight %}
 
     </section>
@@ -136,7 +135,7 @@ $ http://{{page.group}}-server.consul.aws.xebiatechevent.info:8500/ui/
     <section>
         <h1>Création de notre premier service</h1>
 
-Avec consul, la création d’un service passe par la création d’un fichier json décrivant le service. Dans le répertoire /etc/consul.d de la machine contenant l’agent, créer un fichier nommé web.json avec le contenu suivant :
+Avec consul, la création d’un service passe par la création d’un fichier json décrivant le service. Dans le répertoire <em>/etc/consul.d</em> de la machine {{page.group}}-web1.consul.aws.xebiatechevent.info, créer un fichier nommé web.json avec le contenu suivant :
 
 {% highlight javascript %}
 {"service":
@@ -147,7 +146,9 @@ Avec consul, la création d’un service passe par la création d’un fichier j
 }
 {% endhighlight %}
 
-Lancer ensuite la commande consul reload pour demander à consul de recharger la configuration.
+        Ici, nous avons déclaré à consul qu'il existe sur ce serveur un service nommé web et exposé sur le port 8000.
+
+Lancer ensuite la commande consul reload pour demander à l'agent consul de recharger la configuration.
 
 {% highlight bash %}
 $ consul reload
@@ -166,19 +167,20 @@ Consul met à disposition deux interfaces pour avoir accès aux informations d�
         </ul>
 Essayer de récupérer les informations de votre service avec les deux interfaces disponibles.
 
-[lien vers la documentation de l'api REST](https://www.consul.io/docs/agent/http/catalog.html)
+<a href="https://www.consul.io/docs/agent/http/catalog.html">lien vers la documentation de l'api REST</a>
 
-[lien vers la documentation de l'interface DNS](https://www.consul.io/docs/agent/dns.html)
+<a href = "https://www.consul.io/docs/agent/dns.html">lien vers la documentation de l'interface DNS</a>
 
+        Vous pouvez utiliser curl comme client http et dig comme client dns.
 
 <div class = 'solution'>
 {% highlight bash %}
-$ curl localhost:8500/v1/catalog/service/web
+$ curl localhost:8500/v1/health/service/web
 $ dig @127.0.0.1 -p 8600 web.service.consul
 {% endhighlight %}
 </div>
 
-Remarque: Consul est aussi capable d'utiliser le protocole DNS SRV, qui permet notamment d’accéder en plus de l’adresse IP au port du serveur demandé :
+Remarque : Consul est aussi capable d'utiliser le protocole DNS SRV, qui permet notamment d’accéder en plus de l’adresse IP au port du serveur demandé :
 
 <div class = 'solution'>
 {% highlight bash %}
@@ -193,11 +195,11 @@ $ dig @127.0.0.1 -p 8600 web.service.consul SRV
 
         <h2>Au niveau du service</h2>
 
-        Il est possible de rajouter un health check pour déterminer si notre service et up ou non. Modifier le fichier web.json pour ajouter un health check.
+        Il est possible de rajouter un health check pour déterminer si notre service est up ou non. Modifier le fichier web.json pour rajouter la gestion du health check.
 
-        Penser à recharger la configuration.
+        N'oubliez pas de recharger la configuration.
 
-        [lien vers la documentation du health check](https://www.consul.io/docs/agent/checks.html)
+        <a href="https://www.consul.io/docs/agent/checks.html">lien vers la documentation du health check</a>
 
         <div class = 'solution'>
 {% highlight javascript %}
@@ -214,14 +216,14 @@ $ dig @127.0.0.1 -p 8600 web.service.consul SRV
 {% endhighlight %}
         </div>
 
-        Essayer ensuite de demander au serveur DNS fourni par consul l’adresse de notre service “web”. Comme le health check lui indique que le service est KO, il ne renvoie pas l'adresse IP.
+        Essayer ensuite de demander au serveur DNS fourni par consul l’adresse de notre service <em>web</em>. Comme le health check lui indique que le service est KO, il ne renvoie pas l'adresse IP.
         Vous pouvez fixer en lancer un simple serveur http.
 
         {% highlight bash %}
 $ python -m SimpleHTTPServer &
         {% endhighlight %}
 
-        Vous pouvez de nouveaux acceder aux services. Sur l’interface web, des compléments d’informations nous sont fournis sur les résultats du health check.
+        Vous pouvez de nouveaux accéder aux services. Sur l’interface web, des compléments d’informations nous sont fournis sur les résultats du health check.
 
 
         <h2>Au niveau du node</h2>
