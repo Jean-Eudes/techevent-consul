@@ -82,7 +82,7 @@ $ wget https://dl.bintray.com/mitchellh/consul/0.6.4_linux_amd64.zip
 
        lancer le serveur :
         {% highlight bash %}
-$ consul agent -server -bootstrap-expect 1 -data-dir /tmp/consul --client 0.0.0.0 -ui-dir ui -config-dir /etc/consul.d  > log &
+$ consul agent -server -bootstrap-expect 1 -data-dir /tmp/consul --client 0.0.0.0 -ui -config-dir /etc/consul.d  > log &
         {% endhighlight %}
 
         Il est possible de regarder l’état du serveur avec la commande
