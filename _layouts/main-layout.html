@@ -65,7 +65,6 @@
 $ ssh consul@{{page.group}}-server.consul.aws.xebiatechevent.info
         {% endhighlight %}  
 
-
        <h2>Installation de consul (étape déjà faite pour ce techevent)</h2>
 
         Consul est livré sous la forme d’un simple binaire. Il suffit simplement de le télécharger :
@@ -262,60 +261,25 @@ $ cat /proc/loadavg | awk '{printf "CPU Load Average: 1m: %.2f, 5m: %.2f, 15m: %
 
     </section>
 
-<section>
-    <h1>Base de donnée clef valeur</h1>
-
-    Consul possède également une base de donnée clef valeur lui permettant de stocker des informations qui pourront par la suite être accessible par exemple par les applications via l’API http.
-
-    A l’aide de l’API http, renseigner les trois clefs suivantes avec leurs valeurs associés :
-
-    {% highlight text %}
-service/haproxy/maxconn : 256
-service/haproxy/timeouts/connect : 5000ms
-service/haproxy/timeouts/client : 50000ms
-service/haproxy/timeouts/server : 50000ms
-service/haproxy/mode : http
-    {% endhighlight %}
-
-    <a href="https://www.consul.io/intro/getting-started/kv.html">lien vers la documentation de la base de donnée</a>
-
-    <div class = 'solution'>
-{% highlight bash %}
-$ curl -X PUT -d '256' http://localhost:8500/v1/kv/service/haproxy/maxconn
-$ curl -X PUT -d '5000ms' http://localhost:8500/v1/kv/service/haproxy/timeouts
-$ curl -X PUT -d 'http' http://localhost:8500/v1/kv/service/haproxy/mode
-{% endhighlight %}
-    </div>
-
-</section>
-
 
 <section>
-    <h1>Gestion des templates</h1>
+    <h1>Configuration du HAproxy</h1>
 
-    Il peut parfois être nécessaire de mettre à jour dynamiquement la configuration d'un fichier en fonction de la création d'un nouveau service ou d'une mise à jour d'un dictionnaire.
-    Dans l'exemple suivant, on va demander à consul de nous générer une configuration haproxy qui se mettra automatiquement à jour lorsque l'on rajoutera un nouveau serveur web.
+    On va maintenant générer la configuration de notre HAproxy à partir des informations contenu dans <em>consul</em>. Le serveur HAproxy sera en frontal
+    de notre service <em>web</em>.
 
-    Pour commencer, dans notre serveur consul, dans son répertoire (etc/consul.d), déclarer un service nommé web avec également un tag web.
+    Dans l'écosystème consul, il existe un outil appelé <em>consul-template</em> qui permet de générer un fichier à partir des informations contenues dans consul.
+    consul-template regénère ce fichier si la configuration change dans consul, et peut également lancer une commande (par exemple un reload de haproxy).
 
-    Penser à rechager la configuration.
-
-    On va maintenant installer un outil s'appelant consul-template permettant comme son nom l'indique de gérer des templates en fonction de la configuration consul.
+    Les fichiers template gérés par consul se base sur la syntaxe <a href="https://github.com/hashicorp/hcl">hcl</a>hcl. En vous basant sur l'exemple suivant,
+    créer un fichier template (haproxy.tmpl) qui génère une configuration haproxy renvoyant les requêtes vers notre service <em>web</em>.
 
     {% highlight bash %}
-cd
-$ wget https://github.com/hashicorp/consul-template/releases/download/v0.11.0/consul_template_0.11.0_linux_amd64.zip
-$ unzip consul_template_0.11.0_linux_amd64.zip
-$ mv consul-template bin
-$ rm consul_template_0.11.0_linux_amd64.zip
+$ ssh consul@{{page.group}}-balancer.consul.aws.xebiatechevent.info
     {% endhighlight %}
 
-    Les fichiers template géré par consul se base sur la syntaxe [hcl](https://github.com/hashicorp/hcl). En vous basant sur l'exemple suivant,
-    créer un fichier template (haproxy.tmpl) qui génère une configuration haproxy renvoyant les requêtes sur un serveur au hasard.
 
-    Pour celà, basez vous sur le service web que nous avons défini dans nos services
-
-    Exemple :
+    Exemple de configuration HAproxy :
 
     {% highlight text %}
 global
@@ -331,18 +295,16 @@ timeout server 50000ms
 listen http-in
 bind *:8000
 server web1 127.0.0.1:8000
-server web2 127.0.0.1:8000
     {% endhighlight %}
 
 
-    Pour lancer consul-template, on utilise la commande ci-dessous.
+    Pour lancer consul-template, utlisez la commande ci-dessous.
 
     {% highlight bash %}
-$ consul-template   -consul localhost:8500   -template haproxy.tmpl:haproxy.conf &
+$ consul-template -consul <address_serveur_consul/>:8500 -template "haproxy.tmpl:haproxy.conf" &
     {% endhighlight %}
 
-    [lien vers la documentation de consul-template](https://github.com/hashicorp/consul-template)
-
+    <a href="https://github.com/hashicorp/consul-template">lien vers la documentation de consul-template</a>
 
     <div class = 'solution'>
         {% highlight ruby %}
@@ -362,13 +324,52 @@ server {{ "{{ .Node "}} }} {{ "{{.Address "}} }} : {{ "{{ .Port "}} }} {{ "{{ en
         {% endhighlight %}
     </div>
 
-    Eteigner un de vos serveur python, et regarder le fichier haproxy.conf se mettre à jour.
-
-
-    Pour finir, on va utiliser les données des dictionnaires défini précedement pour finaliser notre template.
-    Passer à tuer et à redémarrer consul-template pour prendre en compte la nouvelle configuration.
+    Eteigner votre serveur python, et regarder le fichier haproxy.conf se mettre à jour.
 
 </section>
+
+
+    <section>
+        <h1>Scaling automatique de notre service</h1>
+
+        On va maintenant ajouter un deuxième service <em>web</em> sur la machine web2, et l'enregistrer auprès de consul. Pour celà, connectez vous sur la machine web2, installer le client consul, et enregistrer un deuxième service <em>web</em>.
+
+
+        {% highlight bash %}
+$ ssh consul@{{page.group}}-web1.consul.aws.xebiatechevent.info
+$ consul agent -data-dir /tmp/consul -node=agent1 -config-dir /etc/consul.d > log &
+$ consul join <addr_ip_privé_serveur_consul/>
+        {% endhighlight %}
+
+    </section>
+
+    <section>
+        <h1>Base de donnée clef valeur</h1>
+
+        Consul possède également une base de donnée clef valeur lui permettant de stocker des informations qui pourront par la suite être accessible par exemple par les applications via l’API http.
+
+        A l’aide de l’API http, renseigner les trois clefs suivantes avec leurs valeurs associés :
+
+        {% highlight text %}
+        service/haproxy/maxconn : 256
+        service/haproxy/timeouts/connect : 5000ms
+        service/haproxy/timeouts/client : 50000ms
+        service/haproxy/timeouts/server : 50000ms
+        service/haproxy/mode : http
+        {% endhighlight %}
+
+        <a href="https://www.consul.io/intro/getting-started/kv.html">lien vers la documentation de la base de donnée</a>
+
+        <div class = 'solution'>
+            {% highlight bash %}
+            $ curl -X PUT -d '256' http://localhost:8500/v1/kv/service/haproxy/maxconn
+            $ curl -X PUT -d '5000ms' http://localhost:8500/v1/kv/service/haproxy/timeouts
+            $ curl -X PUT -d 'http' http://localhost:8500/v1/kv/service/haproxy/mode
+            {% endhighlight %}
+        </div>
+
+    </section>
+
 
 </div>
 <!--[if !IE]><script>fixScale(document);</script><![endif]-->
