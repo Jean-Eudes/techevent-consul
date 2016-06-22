@@ -283,18 +283,18 @@ $ ssh consul@{{page.group}}-balancer.consul.aws.xebiatechevent.info
 
     {% highlight text %}
 global
-daemon
-maxconn 256
+  daemon
+  maxconn 256
 
 defaults
-mode http
-timeout connect 5000ms
-timeout client 50000ms
-timeout server 50000ms
+  mode http
+  timeout connect 5000ms
+  timeout client 50000ms
+  timeout server 50000ms
 
 listen http-in
-bind *:8000
-server web1 127.0.0.1:8000
+  bind *:8000
+  server web1 127.0.0.1:8000
     {% endhighlight %}
 
 
@@ -309,18 +309,20 @@ $ consul-template -consul <address_serveur_consul/>:8500 -template "haproxy.tmpl
     <div class = 'solution'>
         {% highlight ruby %}
 global
-daemon
-maxconn 256
+  daemon
+  maxconn 256
 
 defaults
-mode http
-timeout connect 5000ms
-timeout client 50000ms
-timeout server 50000ms
+  mode http
+  timeout connect 5000ms
+  timeout client 50000ms
+  timeout server 50000ms
 
 listen http-in
-bind *:8000 {{ "{{ range service 'web' "}} }}
-server {{ "{{ .Node "}} }} {{ "{{.Address "}} }} : {{ "{{ .Port "}} }} {{ "{{ end "}} }}
+  bind *:8000
+        {{ "{{ range service 'web' "}} }}
+  server {{ "{{ .Node "}} }} {{ "{{.Address "}} }} : {{ "{{ .Port "}} }}
+        {{ "{{ end "}} }}
         {% endhighlight %}
     </div>
 
