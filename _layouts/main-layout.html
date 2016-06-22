@@ -317,11 +317,11 @@ $ consul reload
     </section>
 
     <section>
-        <h1>Base de donnée clef valeur</h1>
+        <h1>Base de donnée clefs valeurs</h1>
 
         Consul possède également une base de donnée clef valeur lui permettant de stocker des informations qui pourront par la suite être accessible par exemple par les applications via l’API http.
 
-        A l’aide de l’API http, renseigner les trois clefs suivantes avec leurs valeurs associés :
+        A l’aide de l’API http, renseigner les conq clefs suivantes avec leurs valeurs associés :
 
         {% highlight text %}
         service/haproxy/maxconn : 256
@@ -331,7 +331,7 @@ $ consul reload
         service/haproxy/mode : http
         {% endhighlight %}
 
-        <a href="https://www.consul.io/intro/getting-started/kv.html">lien vers la documentation de la base de données</a>
+        <a href="https://www.consul.io/intro/getting-started/kv.html">lien vers la documentation du key value store de consul</a>
 
         <div class = 'solution'>
             {% highlight bash %}
