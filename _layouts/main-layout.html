@@ -224,41 +224,6 @@ $ python -m SimpleHTTPServer &
 
         Vous pouvez de nouveaux accéder aux services. Sur l’interface web, des compléments d’informations nous sont fournis sur les résultats du health check.
 
-
-        <h2>Au niveau du node</h2>
-
-        Il est aussi possible de rajouter un health check au niveau du node. Consul va considérer que si le health check d'un node renvoie une erreur, alors le service n'est pas accessible.
-
-        On va rajouter un check simple qui permet de visualiser la consommation mémoire de notre agent. Pour celà, on va créer dans notre répertoire bin un fichier mem.sh contenant le script suivant :
-
-        {% highlight bash %}
-$ free -m | awk 'NR==2{printf "Memory Usage: %s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }'
-        {% endhighlight %}
-
-        Penser à rajouter les droits d'exécution sur ce fichier.
-
-        Ensuite, dans notre répertoire de travail consul, créer un fichier nommé memcheck.json permettant à consul de nous afficher sur l’ui la mémoire utilisé sur votre machine.
-
-        <div class = 'solution'>
-{% highlight javascript %}
-{"check":
-    {"name": "memory check",
-        "script": "$HOME/bin/mem.sh",
-        "interval": "30s"
-    }
-}
-{% endhighlight %}
-        </div>
-
-        Remarque : le code de retour du script va indiquer si le service est up ou non
-
-        Vous pouvez vous amusez à faire de même pour vérifier l’utilisation disque de la machine et le load average avec les scripts suivants :
-
-{% highlight bash %}
-$ df -h | awk '$NF=="/"{printf "Disk Usage: %d/%dGB (%s)\n", $3,$2,$5}'
-$ cat /proc/loadavg | awk '{printf "CPU Load Average: 1m: %.2f, 5m: %.2f, 15m: %.2f\n", $1,$2,$3}'
-{% endhighlight %}
-
     </section>
 
 
@@ -347,7 +312,7 @@ $ consul reloads
         {% endhighlight %}
             </div>
 
-        On remarque que la configuration du fichier haproxy se met automatiquement à jour.
+        On remarque que la configuration du fichier haproxy se met automatiquement à jour, et que le fichier contient maintenant deux lignes.
 
     </section>
 
@@ -375,6 +340,44 @@ $ consul reloads
             $ curl -X PUT -d 'http' http://localhost:8500/v1/kv/service/haproxy/mode
             {% endhighlight %}
         </div>
+
+    </section>
+
+    <section>
+        <h1>Ajout d'un health check au niveau du node</h1>
+
+        Il est aussi possible de rajouter un health check au niveau du node. Consul va considérer que si le health check d'un node renvoie une erreur, alors tous les services déployés sur ce node sont considérés comme inaccessible.
+
+        On va rajouter un check simple qui permet de visualiser la consommation mémoire de notre agent. Pour celà, on va créer dans notre répertoire bin un fichier mem.sh contenant le script suivant :
+
+        {% highlight bash %}
+        $ free -m | awk 'NR==2{printf "Memory Usage: %s/%sMB (%.2f%%)\n", $3,$2,$3*100/$2 }'
+        {% endhighlight %}
+
+        Penser à rajouter les droits d'exécution sur ce fichier.
+
+        Ensuite, dans notre répertoire de travail consul, créer un fichier nommé memcheck.json permettant à consul de nous afficher sur l’ui la mémoire utilisé sur votre machine.
+
+        <div class = 'solution'>
+            {% highlight javascript %}
+            {"check":
+            {"name": "memory check",
+            "script": "$HOME/bin/mem.sh",
+            "interval": "30s"
+            }
+            }
+            {% endhighlight %}
+        </div>
+
+        Remarque : le code de retour du script va indiquer si le service est up ou non
+
+        Vous pouvez vous amusez à faire de même pour vérifier l’utilisation disque de la machine et le load average avec les scripts suivants :
+
+        {% highlight bash %}
+        $ df -h | awk '$NF=="/"{printf "Disk Usage: %d/%dGB (%s)\n", $3,$2,$5}'
+        $ cat /proc/loadavg | awk '{printf "CPU Load Average: 1m: %.2f, 5m: %.2f, 15m: %.2f\n", $1,$2,$3}'
+        {% endhighlight %}
+
 
     </section>
 
