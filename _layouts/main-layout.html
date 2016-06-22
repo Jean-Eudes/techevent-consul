@@ -80,13 +80,7 @@ $ wget https://dl.bintray.com/mitchellh/consul/0.6.4_linux_amd64.zip
 
         Nous allons maintenant lancer notre serveur consul, en spécifiant que nous ne lançons que une instance (pas de redondance), et qu’il sera accessible depuis l’extérieur.
 
-        Pour celà, connectez vous sur le serveur consul
-
-        {% highlight bash %}
-$ ssh consul@{{page.group}}-server.consul.aws.xebiatechevent.info
-        {% endhighlight %}
-
-        et lancer le serveur :
+       lancer le serveur :
         {% highlight bash %}
 $ consul agent -server -bootstrap-expect 1 -data-dir /tmp/consul --client 0.0.0.0 -ui-dir ui -config-dir etc/consul.d  > log &
         {% endhighlight %}
