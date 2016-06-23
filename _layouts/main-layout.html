@@ -312,25 +312,27 @@ $ consul reload
     <section>
         <h1>Base de donnée clefs valeurs</h1>
 
-        Consul possède également une base de donnée clef valeur lui permettant de stocker des informations qui pourront par la suite être accessible par exemple par les applications via l’API http.
+        Consul possède également une base de données clef valeur lui permettant de stocker des informations qui pourront par la suite être accessible par exemple par les applications via l’API http.
 
-        A l’aide de l’API http, renseigner les conq clefs suivantes avec leurs valeurs associés :
+        A l’aide de l’API http, renseignez les cinq clefs suivantes avec leurs valeurs associées :
 
         {% highlight text %}
-        service/haproxy/maxconn : 256
-        service/haproxy/timeouts/connect : 5000ms
-        service/haproxy/timeouts/client : 50000ms
-        service/haproxy/timeouts/server : 50000ms
-        service/haproxy/mode : http
+service/haproxy/maxconn : 256
+service/haproxy/timeout/connect : 5000ms
+service/haproxy/timeout/client : 50000ms
+service/haproxy/timeout/server : 50000ms
+service/haproxy/mode : http
         {% endhighlight %}
 
         <a href="https://www.consul.io/intro/getting-started/kv.html">lien vers la documentation du key value store de consul</a>
 
         <div class = 'solution'>
             {% highlight bash %}
-            $ curl -X PUT -d '256' http://localhost:8500/v1/kv/service/haproxy/maxconn
-            $ curl -X PUT -d '5000ms' http://localhost:8500/v1/kv/service/haproxy/timeouts
-            $ curl -X PUT -d 'http' http://localhost:8500/v1/kv/service/haproxy/mode
+$ curl -X PUT -d '256' http://localhost:8500/v1/kv/service/haproxy/maxconn
+$ curl -X PUT -d '5000ms' http://localhost:8500/v1/kv/service/haproxy/timeout/connect
+$ curl -X PUT -d '50000ms' http://localhost:8500/v1/kv/service/haproxy/timeout/client
+$ curl -X PUT -d '50000ms' http://localhost:8500/v1/kv/service/haproxy/timeout/server
+$ curl -X PUT -d 'http' http://localhost:8500/v1/kv/service/haproxy/mode
             {% endhighlight %}
         </div>
 
