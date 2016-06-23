@@ -300,7 +300,7 @@ listen http-in
 $ ssh consul@{{page.group}}-web2.consul.aws.xebiatechevent.info
 $ consul agent -data-dir /tmp/consul -node=agent2 -config-dir /etc/consul.d > log &
 $ consul join <addr_ip_privé_serveur_consul/>
-$ echo -e "{"service": { "name": "web", "tags": ["web2"], "port": 8000} }" > /etc/consul.d/web2.json
+$ echo -e "{\"service\": { \"name\": \"web\", \"tags\": [\"web2\"], \"port\": 8000} }" > /etc/consul.d/web2.json
 $ consul reload
         {% endhighlight %}
             </div>
