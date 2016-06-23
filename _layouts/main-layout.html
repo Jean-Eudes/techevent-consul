@@ -339,6 +339,8 @@ $ curl -X PUT -d 'http' http://localhost:8500/v1/kv/service/haproxy/mode
         Connectez vous ensuite sur la machine balancer, et modifiez la configuration du template haproxy pour utiliser ces valeurs dans la
         configuration HAproxy.
 
+        <p>  <a href="https://github.com/hashicorp/consul-template#user-content-templating-language">lien vers la documentation de consul-template</a> dans la partie <em>Templating Language</em></p>
+
     </section>
 
 
@@ -352,7 +354,7 @@ $ curl -X PUT -d 'http' http://localhost:8500/v1/kv/service/haproxy/mode
 
 <div class = 'solution'>
 {% highlight bash %}
-$ consul maint -enable -service web -reason “ma raison”
+$ consul maint -enable -service web -reason "ma raison"
 $ consul maint -disable -service web
 {% endhighlight %}
 </div>
