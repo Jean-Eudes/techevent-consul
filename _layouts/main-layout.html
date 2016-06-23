@@ -231,6 +231,7 @@ $ python -m SimpleHTTPServer &
 
     Les fichiers template gérés par consul se base sur la syntaxe <a href="https://github.com/hashicorp/hcl">hcl</a>. En vous basant sur l'exemple suivant,
     créer un fichier template (haproxy.tmpl) qui génère une configuration haproxy renvoyant les requêtes vers notre service <em>web</em>.
+    <p>  <a href="https://github.com/hashicorp/consul-template">lien vers la documentation de consul-template</a> dans la partie <b>Templating Language</b></p>
 
     {% highlight bash %}
 $ ssh consul@{{page.group}}-balancer.consul.aws.xebiatechevent.info
@@ -262,7 +263,6 @@ listen http-in
 $ consul-template -consul <address_serveur_consul/>:8500 -template "haproxy.tmpl:haproxy.conf" &
     {% endhighlight %}
 
-    <a href="https://github.com/hashicorp/consul-template">lien vers la documentation de consul-template</a>
 
     <div class = 'solution'>
         {% highlight ruby %}
