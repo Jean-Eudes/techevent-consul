@@ -297,7 +297,7 @@ listen http-in
         <div class = 'solution'>
 
         {% highlight bash %}
-$ ssh consul@{{page.group}}-web1.consul.aws.xebiatechevent.info
+$ ssh consul@{{page.group}}-web2.consul.aws.xebiatechevent.info
 $ consul agent -data-dir /tmp/consul -node=agent1 -config-dir /etc/consul.d > log &
 $ consul join <addr_ip_privé_serveur_consul/>
 $ echo -e "{"service": { "name": "web", "tags": ["web2"], "port": 8000} }" > /etc/consul.d/web2.json
@@ -356,12 +356,12 @@ $ free -m | awk 'NR==2{printf "Memory Usage: %s/%sMB (%.2f%%)\n", $3,$2,$3*100/$
 
         <div class = 'solution'>
             {% highlight javascript %}
-            {"check":
-            {"name": "memory check",
-            "script": "$HOME/bin/mem.sh",
-            "interval": "30s"
-            }
-            }
+{"check":
+    {"name": "memory check",
+        "script": "$HOME/bin/mem.sh",
+        "interval": "30s"
+    }
+}
             {% endhighlight %}
         </div>
 
