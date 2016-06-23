@@ -278,7 +278,8 @@ defaults
 
 listen http-in
   bind *:8000
-        {{ "{{ range service &quot;web&quot; "}} }}
+        {{ "{{ }} range service "web" {{ "}} }}
+        {{ "{{ range service "{{ " }}"web' "}} }}
   server {{ "{{ .Node "}} }} {{ "{{.Address "}} }} : {{ "{{ .Port "}} }}
         {{ "{{ end "}} }}
         {% endhighlight %}
